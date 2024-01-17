@@ -9,3 +9,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
+main {
+  @apply pt-12 md:pt-16;
+}
