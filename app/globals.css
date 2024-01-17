@@ -13,3 +13,7 @@ body {
 main {
   @apply pt-12 md:pt-16;
 }
+
+h1 {
+  @apply text-4xl font-extrabold md:text-5xl;
+}

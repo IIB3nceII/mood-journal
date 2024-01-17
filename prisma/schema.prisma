@@ -16,9 +16,13 @@ model User {
   hashedPassword String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  favoriteIds    String[]  @db.ObjectId
+  isDeleted      Boolean   @default(false)
 
-  accounts     Account[]
+  accounts Account[]
+  journals Journal[] @relation(name: "user")
+
+  sharedJournalIDs String[]  @db.ObjectId
+  sharedJournals   Journal[] @relation(name: "shared", fields: [sharedJournalIDs], references: [id])
 }
 
 model Account {
@@ -34,8 +38,25 @@ model Account {
   scope             String?
   id_token          String? @db.String
   session_state     String?
+  isDeleted         Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Journal {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String   @unique @default(uuid())
+  userId    String   @db.ObjectId
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  user User @relation(name: "user", fields: [userId], references: [id], onDelete: Cascade)
+
+  sharedWithIDs String[] @db.ObjectId
+  sharedWith    User[]   @relation(name: "shared", fields: [sharedWithIDs], references: [id])
 }
