@@ -2,7 +2,7 @@ import Providers from '@providers'
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
 import './globals.css'
-import LayoutProps from '@/types/layout.model'
+import LayoutProps from '@/app/types/layout.model'
 
 const font = Nunito({ subsets: ['latin'] })
 

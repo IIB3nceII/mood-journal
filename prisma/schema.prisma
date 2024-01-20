@@ -19,10 +19,10 @@ model User {
   isDeleted      Boolean   @default(false)
 
   accounts Account[]
-  journals Journal[] @relation(name: "user")
+  journals Journal[]
 
   sharedJournalIDs String[]  @db.ObjectId
-  sharedJournals   Journal[] @relation(name: "shared", fields: [sharedJournalIDs], references: [id])
+  sharedJournals   Journal[] @relation("sharedJournals", fields: [sharedJournalIDs], references: [id])
 }
 
 model Account {
@@ -47,16 +47,29 @@ model Account {
 
 model Journal {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  public_id String   @unique @default(uuid())
-  userId    String   @db.ObjectId
+  publicId  String   @unique @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  userId String @db.ObjectId
+  owner  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sharedWithIDs String[] @db.ObjectId
+  sharedWith    User[]   @relation("sharedJournals", fields: [sharedWithIDs], references: [id])
+
+  docs Doc[]
+}
+
+model Doc {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDeleted Boolean  @default(false)
 
-  user User @relation(name: "user", fields: [userId], references: [id], onDelete: Cascade)
-
-  sharedWithIDs String[] @db.ObjectId
-  sharedWith    User[]   @relation(name: "shared", fields: [sharedWithIDs], references: [id])
+  journalId String  @db.ObjectId
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
 }

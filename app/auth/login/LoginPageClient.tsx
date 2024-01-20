@@ -24,7 +24,6 @@ const LoginPageClient = () => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data)
     setIsLoading(true)
 
     try {

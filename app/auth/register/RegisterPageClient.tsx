@@ -1,11 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import { Button, Container, Input } from '@common'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { Button, Container, Input } from '@common'
 
 const RegisterPageClient = () => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const {
@@ -24,7 +26,12 @@ const RegisterPageClient = () => {
     setIsLoading(true)
 
     try {
-      await fetch('/api/register', { method: 'POST', body: JSON.stringify(data) })
+      const res = await fetch('/api/auth/register', { method: 'POST', body: JSON.stringify(data) })
+
+      if (!res.ok) toast.error('Registration was not successful.')
+
+      toast.success('Registration was successful.')
+      router.push('/home')
     } catch (e) {
       toast.error('Something went wrong during registration.')
     } finally {

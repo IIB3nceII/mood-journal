@@ -2,10 +2,24 @@
 
 import { Button, Container } from '@common'
 import { createJournal } from '@utils'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 const UserHomePage = () => {
-  const onCreateJournal = async () => {
-    await createJournal({ title: 'test', content: 'test' })
+  const router = useRouter()
+
+  const onCreateJournal = async (): Promise<void> => {
+    const res = await createJournal()
+    const errorMessage: string = 'Something went wrong during journal creation.'
+
+    if (!res.ok) toast.error(errorMessage)
+
+    if (res.data?.publicId) {
+      toast.success('Journal created successfully.')
+      router.push(`/journals?id=${res.data.publicId}`)
+    } else {
+      toast.error(errorMessage)
+    }
   }
 
   return (

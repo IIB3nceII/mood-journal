@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Header } from '@components'
-import LayoutProps from '@/types/layout.model'
+import LayoutProps from '@/app/types/layout.model'
 
 const ProtectedLayout = ({ children }: LayoutProps) => (
   <>
