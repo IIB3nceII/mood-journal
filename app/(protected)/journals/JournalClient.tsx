@@ -2,13 +2,12 @@
 
 import Doc from '@/app/types/entities/doc.model'
 import Journal from '@/app/types/entities/journal.model'
-import { Container } from '@common'
-import { useAutosave } from '@hooks'
+import { Button, Container } from '@common'
+import { useAutosave, useShareModal } from '@hooks'
 import { editDoc, editJournal } from '@utils'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ContentEdit from './ContentEdit'
 import Sidebar from './Sidebar'
-import { set } from 'react-hook-form'
 
 const SAVE_TRIGGER_COUNT = 50
 
@@ -17,6 +16,7 @@ type JournalClientProps = {
 }
 
 const JournalClient = ({ journal }: JournalClientProps) => {
+  const { isOpen, onOpen, onClose } = useShareModal()
   const [sidebarItems, setSidebarItems] = useState<Doc[]>(journal.docs || [])
   const [selectedJournal, setSelectedJournal] = useState<Partial<Journal>>(journal)
   const [selectedDoc, setSelectedDoc] = useState<Doc | null>(journal.docs?.length ? journal?.docs[0] : null)
@@ -71,13 +71,20 @@ const JournalClient = ({ journal }: JournalClientProps) => {
         <div className="flex h-full gap-3">
           <Sidebar title={selectedJournal.title} onTitleChange={onJournalTitleChange} items={sidebarItems} onTitleBlur={onEditJournal} />
           <div className="flex h-full w-2/3">
-            <ContentEdit
-              item={selectedDoc}
-              onTitleChange={onEditDocTitle}
-              onContentChange={onEditDocContent}
-              onTitleBlur={onSaveDoc}
-              onContentBlur={onSaveDoc}
-            />
+            <div className="flex w-full flex-col">
+              <div className="flex items-center justify-end">
+                <div>
+                  <Button label="Share" onClick={onOpen} />
+                </div>
+              </div>
+              <ContentEdit
+                item={selectedDoc}
+                onTitleChange={onEditDocTitle}
+                onContentChange={onEditDocContent}
+                onTitleBlur={onSaveDoc}
+                onContentBlur={onSaveDoc}
+              />
+            </div>
           </div>
         </div>
       </Container>

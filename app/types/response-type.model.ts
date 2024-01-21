@@ -1,4 +1,4 @@
-type ResponseType<T = null> = {
+type ResponseType<T = undefined> = {
   ok: boolean
   status: number
   data?: T
