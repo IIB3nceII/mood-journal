@@ -1,10 +1,11 @@
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import prisma from '@prismadb'
+import User from '@/app/types/entities/user.model'
 
 export const getSession = async () => await getServerSession(authOptions)
 
-const getCurrentUser = async () => {
+const getCurrentUser = async (): Promise<Omit<User, 'journals' | 'sharedJournals'> | null> => {
   try {
     const session = await getSession()
 
@@ -18,7 +19,9 @@ const getCurrentUser = async () => {
 
     if (!currentUser) return null
 
-    // TODO: Remove pw hash from response
+    // @ts-ignore
+    if (currentUser.hashedPassword) delete currentUser.hashedPassword
+
     return {
       ...currentUser,
       createdAt: currentUser.createdAt.toISOString(),
