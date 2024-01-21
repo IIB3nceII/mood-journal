@@ -14,7 +14,7 @@ const ContentEdit = ({ item, onTitleChange, onContentChange, onTitleBlur, onCont
   if (!item) return <p>No item selected.</p>
 
   return (
-    <div>
+    <div className="flex w-full flex-col">
       <input type="text" placeholder="Aa..." value={item.title} onChange={(e) => onTitleChange(e.target.value)} onBlur={onTitleBlur} />
       <textarea
         className="h-full w-full resize-none outline-none"

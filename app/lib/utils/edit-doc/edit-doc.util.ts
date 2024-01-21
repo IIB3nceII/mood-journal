@@ -1,7 +1,7 @@
-import APIResponse from '@/app/types/api-response.model'
+import ResponseType from '@/app/types/response-type.model'
 import Doc from '@/app/types/entities/doc.model'
 
-const editDoc = async (doc: Partial<Doc>): Promise<APIResponse<Doc>> => {
+const editDoc = async (doc: Partial<Doc>): Promise<ResponseType<Doc>> => {
   const resObj = { ok: false, status: 400, error: 'Doc object can not be parsed.' }
 
   try {

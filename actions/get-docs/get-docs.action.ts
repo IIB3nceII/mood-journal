@@ -1,8 +1,8 @@
 import prisma from '@prismadb'
-import APIResponse from '@/app/types/api-response.model'
+import ResponseType from '@/app/types/response-type.model'
 import Doc from '@/app/types/entities/doc.model'
 
-const getDocs = async (journalId: string): Promise<APIResponse<Doc[]>> => {
+const getDocs = async (journalId: string): Promise<ResponseType<Doc[]>> => {
   if (!journalId.length) return { ok: false, status: 400, error: 'Journal ID is required' }
 
   try {

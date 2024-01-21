@@ -1,7 +1,7 @@
-import APIResponse from '@/app/types/api-response.model'
+import ResponseType from '@/app/types/response-type.model'
 import Journal from '@/app/types/entities/journal.model'
 
-const editJournal = async (journal: Partial<Journal>): Promise<APIResponse<Journal>> => {
+const editJournal = async (journal: Partial<Journal>): Promise<ResponseType<Journal>> => {
   const resObj = { ok: false, status: 400, error: 'Journal object can not be parsed.' }
 
   try {

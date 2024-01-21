@@ -1,12 +1,12 @@
-import APIResponse from '@/app/types/api-response.model'
+import ResponseType from '@/app/types/response-type.model'
 import Journal from '@/app/types/entities/journal.model'
 import { getCurrentUser, getDocs } from '@actions'
 import prisma from '@prismadb'
 
 type ReturnType = Pick<Journal, 'publicId' | 'title' | 'createdAt' | 'updatedAt' | 'docs'>
 
-const getJournal = async (journalId: string | null): Promise<APIResponse<ReturnType>> => {
-  const resObj = { ok: false, status: 404, error: 'Journal not found.' } as APIResponse<Journal>
+const getJournal = async (journalId: string | null): Promise<ResponseType<ReturnType>> => {
+  const resObj = { ok: false, status: 404, error: 'Journal not found.' } as ResponseType<Journal>
 
   if (!journalId) return resObj
 

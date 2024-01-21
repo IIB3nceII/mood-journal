@@ -11,7 +11,7 @@ body {
 }
 
 main {
-  @apply pt-12 md:pt-16;
+  @apply pt-12 md:pt-24;
 }
 
 h1 {

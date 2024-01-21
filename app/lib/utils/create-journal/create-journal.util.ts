@@ -1,7 +1,7 @@
-import APIResponse from '@/app/types/api-response.model'
+import ResponseType from '@/app/types/response-type.model'
 import Journal from '@/app/types/entities/journal.model'
 
-const createJournal = async (): Promise<APIResponse<Journal>> => {
+const createJournal = async (): Promise<ResponseType<Journal>> => {
   try {
     const res = await fetch('/api/journals', { method: 'POST' })
 
