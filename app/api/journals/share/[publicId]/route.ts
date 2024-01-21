@@ -29,8 +29,6 @@ export const PUT = async (req: Request, { params: { publicId } }: { params: { pu
       }
     })
 
-    console.log(newJournal)
-
     return NextResponse.json(newJournal)
   } catch (err) {
     return NextResponse.error()

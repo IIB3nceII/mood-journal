@@ -1,6 +1,5 @@
-import React, { ReactNode } from 'react'
-import { Header, ShareModal } from '@components'
 import LayoutProps from '@/app/types/layout.model'
+import { Header, ShareModal } from '@components'
 
 const ProtectedLayout = ({ children }: LayoutProps) => (
   <>

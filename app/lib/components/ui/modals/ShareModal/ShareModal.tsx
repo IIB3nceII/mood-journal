@@ -2,12 +2,17 @@
 
 import { useShareModal } from '@hooks'
 import { Button, Input } from '@common'
-import { shareJournal } from '@utils'
+import { getUsers, shareJournal } from '@utils'
+import { useQuery } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 const ShareModal = () => {
   const { isOpen, onClose } = useShareModal()
+  const { data, isError } = useQuery({ queryKey: ['share-journal'], queryFn: () => getUsers() })
 
-  if (!isOpen) return null
+  if (isError) toast.error('An error occurred.')
+
+  if (!isOpen || isError) return null
 
   return (
     <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-slate-200 bg-opacity-75" onClick={onClose}>
