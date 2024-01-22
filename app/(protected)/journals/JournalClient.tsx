@@ -2,24 +2,28 @@
 
 import Doc from '@/app/types/entities/doc.model'
 import Journal from '@/app/types/entities/journal.model'
-import { Button, Container } from '@common'
+import { Container } from '@common'
 import { useAutosave, useShareModal } from '@hooks'
 import { editDoc, editJournal } from '@utils'
 import { useEffect, useState } from 'react'
 import ContentEdit from './ContentEdit'
 import Sidebar from './Sidebar'
+import User from '@/app/types/entities/user.model'
 
 const SAVE_TRIGGER_COUNT = 50
 
 type JournalClientProps = {
+  user: Partial<User>
   journal: Partial<Journal>
 }
 
-const JournalClient = ({ journal }: JournalClientProps) => {
-  const { onOpen, onChangeJournalPublicId, onSetSharedWithIDs } = useShareModal()
+const JournalClient = ({ user, journal }: JournalClientProps) => {
+  const { onChangeJournalPublicId, onSetSharedWithIDs } = useShareModal()
   const [sidebarItems, setSidebarItems] = useState<Doc[]>(journal.docs || [])
   const [selectedJournal, setSelectedJournal] = useState<Partial<Journal>>(journal)
   const [selectedDoc, setSelectedDoc] = useState<Doc | null>(journal.docs?.length ? journal?.docs[0] : null)
+
+  const editDisabled = user.id !== journal.userId
 
   let changeCount = 0
 
@@ -30,7 +34,6 @@ const JournalClient = ({ journal }: JournalClientProps) => {
     }
   }, [selectedJournal])
 
-  // TODO: Uncomment
   useAutosave(
     () => {
       if (!selectedDoc) return
@@ -46,13 +49,14 @@ const JournalClient = ({ journal }: JournalClientProps) => {
     [selectedDoc]
   )
 
+  // TODO: Use editJournal() ?
   const onJournalTitleChange = (value: string): void => {
     if (!selectedJournal) return
     setSelectedJournal({ ...selectedJournal, title: value })
   }
 
   const onEditJournal = (value: string): void => {
-    if (!selectedJournal || selectedJournal.title?.trim() === value.trim()) return
+    if (!selectedJournal) return
     editJournal({ ...selectedJournal, title: value.trim() })
   }
 
@@ -75,23 +79,23 @@ const JournalClient = ({ journal }: JournalClientProps) => {
   return (
     <main className="h-screen">
       <Container>
-        <div className="flex h-full gap-3">
-          <Sidebar title={selectedJournal.title} onTitleChange={onJournalTitleChange} items={sidebarItems} onTitleBlur={onEditJournal} />
-          <div className="flex h-full w-2/3">
-            <div className="flex w-full flex-col">
-              <div className="flex items-center justify-end">
-                <div>
-                  <Button label="Share" onClick={onOpen} />
-                </div>
-              </div>
-              <ContentEdit
-                item={selectedDoc}
-                onTitleChange={onEditDocTitle}
-                onContentChange={onEditDocContent}
-                onTitleBlur={onSaveDoc}
-                onContentBlur={onSaveDoc}
-              />
-            </div>
+        <div className="flex h-full">
+          <Sidebar
+            title={selectedJournal.title}
+            items={sidebarItems}
+            editDisabled={editDisabled}
+            onTitleChange={onJournalTitleChange}
+            onTitleBlur={onEditJournal}
+          />
+          <div className="flex h-full w-2/3 pl-4">
+            <ContentEdit
+              item={selectedDoc}
+              editDisabled={editDisabled}
+              onTitleChange={onEditDocTitle}
+              onContentChange={onEditDocContent}
+              onTitleBlur={onSaveDoc}
+              onContentBlur={onSaveDoc}
+            />
           </div>
         </div>
       </Container>
