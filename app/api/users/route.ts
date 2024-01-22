@@ -9,6 +9,7 @@ export const GET = async (req: NextRequest) => {
     const skip = searchParams.get('skip')
     const take = searchParams.get('take')
     const returnCurrent = searchParams.get('returnCurrent')
+    const queryString = searchParams.get('query')
 
     if (!skip?.length || !take?.length || !returnCurrent?.length) return NextResponse.error()
 
@@ -19,7 +20,19 @@ export const GET = async (req: NextRequest) => {
         skip: +skip,
         take: +take,
         where: {
-          isDeleted: false
+          isDeleted: false,
+          OR: [
+            {
+              name: {
+                contains: queryString || ''
+              }
+            },
+            {
+              email: {
+                contains: queryString || ''
+              }
+            }
+          ]
         },
         select: {
           id: true,
@@ -37,6 +50,18 @@ export const GET = async (req: NextRequest) => {
         take: +take,
         where: {
           isDeleted: false,
+          OR: [
+            {
+              name: {
+                contains: queryString || ''
+              }
+            },
+            {
+              email: {
+                contains: queryString || ''
+              }
+            }
+          ],
           id: {
             not: currentUser.id
           }

@@ -5,7 +5,7 @@ import Journal from '@/app/types/entities/journal.model'
 import { Button, Container } from '@common'
 import { useAutosave, useShareModal } from '@hooks'
 import { editDoc, editJournal } from '@utils'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ContentEdit from './ContentEdit'
 import Sidebar from './Sidebar'
 
@@ -16,12 +16,19 @@ type JournalClientProps = {
 }
 
 const JournalClient = ({ journal }: JournalClientProps) => {
-  const { isOpen, onOpen, onClose } = useShareModal()
+  const { onOpen, onChangeJournalPublicId, onSetSharedWithIDs } = useShareModal()
   const [sidebarItems, setSidebarItems] = useState<Doc[]>(journal.docs || [])
   const [selectedJournal, setSelectedJournal] = useState<Partial<Journal>>(journal)
   const [selectedDoc, setSelectedDoc] = useState<Doc | null>(journal.docs?.length ? journal?.docs[0] : null)
 
   let changeCount = 0
+
+  useEffect(() => {
+    if (selectedJournal?.publicId?.length) {
+      onChangeJournalPublicId(selectedJournal.publicId)
+      onSetSharedWithIDs(selectedJournal.sharedWithIDs || [])
+    }
+  }, [selectedJournal])
 
   // TODO: Uncomment
   useAutosave(

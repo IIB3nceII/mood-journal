@@ -1,16 +1,18 @@
 import ResponseType from '@/app/types/response-type.model'
 
-const shareJournal = async (journalPublicId: string, userId: string): Promise<ResponseType> => {
+const shareJournal = async (journalPublicId: string, userIDs: string[]): Promise<ResponseType> => {
   try {
     const response = await fetch(`/api/journals/share/${journalPublicId}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ userId })
+      body: JSON.stringify({ userIDs })
     })
 
-    return { ok: response.ok, status: response.status, error: response.statusText }
+    const data = await response.json()
+
+    return { ok: response.ok, status: response.status, data, error: response.statusText }
   } catch (error) {
     return { ok: false, status: 500, error: 'Internal server error.' }
   }
