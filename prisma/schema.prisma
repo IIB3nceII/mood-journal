@@ -20,6 +20,7 @@ model User {
 
   accounts Account[]
   journals Journal[]
+  comments Comment[]
 
   sharedJournalIDs String[]  @db.ObjectId
   sharedJournals   Journal[] @relation("sharedJournals", fields: [sharedJournalIDs], references: [id])
@@ -59,7 +60,10 @@ model Journal {
   sharedWithIDs String[] @db.ObjectId
   sharedWith    User[]   @relation("sharedJournals", fields: [sharedWithIDs], references: [id])
 
-  docs Doc[]
+  docs             Doc[]
+  comments         Comment[]
+  modelChatHistory ModelMessageBlock[]
+  statistics       JournalStatistic[]
 }
 
 model Doc {
@@ -72,4 +76,47 @@ model Doc {
 
   journalId String  @db.ObjectId
   journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  journalId String  @db.ObjectId
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ModelMessageBlock {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  journalId String  @db.ObjectId
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+}
+
+model JournalStatistic {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  possibility Possibility @default(MINIMAL)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isDeleted   Boolean     @default(false)
+
+  journalId String  @db.ObjectId
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+}
+
+enum Possibility {
+  MINIMAL
+  NATURAL
+  HIGH
 }
