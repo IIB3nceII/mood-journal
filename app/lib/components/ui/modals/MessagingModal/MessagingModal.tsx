@@ -8,7 +8,6 @@ import { FieldValues, SubmitHandler, set, useForm } from 'react-hook-form'
 
 const MessagingModal = () => {
   const { isOpen, journalId, userId, items, onChangeItems, onClose } = useMessagingModal()
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const {

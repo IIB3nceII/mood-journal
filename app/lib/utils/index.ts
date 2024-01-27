@@ -1,3 +1,4 @@
+export * from './chatgpt'
 export { default as createComment } from './create-comment'
 export { default as createJournal } from './create-journal'
 export { default as editDoc } from './edit-doc'

@@ -1,4 +1,3 @@
-import journal from '@/app/lib/shared/stores/journal'
 import prisma from '@prismadb'
 import { NextRequest, NextResponse } from 'next/server'
 

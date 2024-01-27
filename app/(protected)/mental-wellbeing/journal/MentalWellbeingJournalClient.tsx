@@ -1,7 +1,7 @@
 'use client'
 
 import { getJournal } from '@/actions'
-import { getJournalComments, useMessagingModal } from '@/app/lib'
+import { getJournalComments, useChatGPTMessagingModal, useMessagingModal } from '@/app/lib'
 import Journal from '@/app/types/entities/journal.model'
 import User from '@/app/types/entities/user.model'
 import { Container } from '@common'
@@ -15,6 +15,7 @@ type MentalWellbeingJournalClientProps = {
 const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalClientProps) => {
   const queryClient = useQueryClient()
   const { onOpen, onChangeJournalId, onChangeUserId, onChangeItems } = useMessagingModal()
+  const { onOpen: onOpenChatGPTModal, onChangeJournalId: onChangeChatGPTJournalId } = useChatGPTMessagingModal()
 
   const mutation = useMutation({
     mutationFn: () => getJournalComments(journal.id),
@@ -28,6 +29,12 @@ const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalC
     }
   })
 
+  const onOpenGPTModal = () => {
+    if (!journal.id?.length) return
+    onChangeChatGPTJournalId(journal.id)
+    onOpenChatGPTModal()
+  }
+
   return (
     <main>
       <Container>
@@ -35,7 +42,9 @@ const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalC
           <h1>{journal.title}</h1>
 
           <div className="flex items-center gap-3">
-            <button className="rounded-lg bg-blue-400 p-2 text-white">Ask AI</button>
+            <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={onOpenGPTModal}>
+              Ask AI
+            </button>
             <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={() => mutation.mutate()}>
               See comments
             </button>

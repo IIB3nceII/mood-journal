@@ -1,5 +1,5 @@
 import LayoutProps from '@/app/types/layout.model'
-import { Header, MessagingModal, ShareModal } from '@components'
+import { ChatGPTMessagingModal, Header, MessagingModal, ShareModal } from '@components'
 
 const ProtectedLayout = ({ children }: LayoutProps) => (
   <>
@@ -8,6 +8,7 @@ const ProtectedLayout = ({ children }: LayoutProps) => (
 
     <ShareModal />
     <MessagingModal />
+    <ChatGPTMessagingModal />
   </>
 )
 
