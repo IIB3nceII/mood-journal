@@ -1,8 +1,11 @@
+import journal from '@/app/lib/shared/stores/journal'
 import prisma from '@prismadb'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export const GET = async ({ params: { journalId } }: { params: { journalId: string } }) => {
+export const GET = async (req: NextRequest) => {
   try {
+    const searchParams = req.nextUrl.searchParams
+    const journalId = searchParams.get('journalId')
     if (!journalId?.length) return NextResponse.error()
 
     const comments = await prisma.comment.findMany({
@@ -23,23 +26,24 @@ export const GET = async ({ params: { journalId } }: { params: { journalId: stri
 
 export const POST = async (req: Request) => {
   try {
-    const { journalId, userId, comment } = await req.json()
+    const { journalId, userId, content } = await req.json()
 
-    if (!journalId || !userId || !comment) return NextResponse.error()
+    if (!journalId?.length || !userId?.length || !content?.length) return NextResponse.error()
 
-    const data = await prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: {
         journalId,
         userId,
-        content: comment.content,
+        content: content.trim(),
         isDeleted: false
       }
     })
 
-    if (!data) return NextResponse.error()
+    if (!comment) return NextResponse.error()
 
-    return NextResponse.json(data)
+    return NextResponse.json(comment)
   } catch (err) {
+    console.log(err)
     return NextResponse.error()
   }
 }

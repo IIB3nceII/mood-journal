@@ -1,5 +1,5 @@
 import LayoutProps from '@/app/types/layout.model'
-import { Header, ShareModal } from '@components'
+import { Header, MessagingModal, ShareModal } from '@components'
 
 const ProtectedLayout = ({ children }: LayoutProps) => (
   <>
@@ -7,6 +7,7 @@ const ProtectedLayout = ({ children }: LayoutProps) => (
     {children}
 
     <ShareModal />
+    <MessagingModal />
   </>
 )
 

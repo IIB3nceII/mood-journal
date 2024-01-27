@@ -1,7 +1,8 @@
-import User from '@/app/types/entities/user.model'
 import ResponseType from '@/app/types/response-type.model'
 
-const getJournalComments = async (journalId: string): Promise<ResponseType<Comment[]>> => {
+const getJournalComments = async (journalId: string | null | undefined): Promise<ResponseType<Comment[]>> => {
+  if (!journalId?.length) return { ok: false, status: 400, error: 'Bad request.' }
+
   try {
     const res = await fetch(`/api/comments?journalId=${journalId}`)
 

@@ -1,9 +1,9 @@
 import Comment from '@/app/types/entities/comment.model'
 import ResponseType from '@/app/types/response-type.model'
 
-const createComment = async (journalId: string, userId: string, comment: Comment): Promise<ResponseType<Comment>> => {
+const createComment = async (journalId: string, userId: string, content: string): Promise<ResponseType<Comment>> => {
   try {
-    const res = await fetch('/api/comments', { method: 'POST', body: JSON.stringify({ journalId, userId, comment }) })
+    const res = await fetch('/api/comments', { method: 'POST', body: JSON.stringify({ journalId, userId, content }) })
 
     if (!res.ok) return { ok: false, status: res.status, error: res.statusText }
 

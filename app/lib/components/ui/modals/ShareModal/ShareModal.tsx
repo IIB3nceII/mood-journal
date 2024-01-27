@@ -102,7 +102,7 @@ const ShareModal = () => {
 
   if (!isOpen) return null
 
-  return <Modal title="Share" children={modalBodyContent} />
+  return <Modal title="Share" onClose={onClose} children={modalBodyContent} />
 }
 
 export default ShareModal

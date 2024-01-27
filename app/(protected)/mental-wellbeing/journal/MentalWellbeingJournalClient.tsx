@@ -1,6 +1,11 @@
+'use client'
+
+import { getJournal } from '@/actions'
+import { getJournalComments, useMessagingModal } from '@/app/lib'
 import Journal from '@/app/types/entities/journal.model'
 import User from '@/app/types/entities/user.model'
 import { Container } from '@common'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 type MentalWellbeingJournalClientProps = {
   user: Partial<User>
@@ -8,15 +13,32 @@ type MentalWellbeingJournalClientProps = {
 }
 
 const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalClientProps) => {
+  const queryClient = useQueryClient()
+  const { onOpen, onChangeJournalId, onChangeUserId, onChangeItems } = useMessagingModal()
+
+  const mutation = useMutation({
+    mutationFn: () => getJournalComments(journal.id),
+    onSuccess: (res) => {
+      if (!journal.id?.length || !user.id?.length) return
+      onChangeJournalId(journal.id)
+      onChangeUserId(user.id)
+      onChangeItems(res.data || [])
+      onOpen()
+      queryClient.invalidateQueries({ queryKey: ['journal-comments'] })
+    }
+  })
+
   return (
     <main>
       <Container>
-        <section className='flex items-center gap-8 mb-8'>
+        <section className="mb-8 flex items-center gap-8">
           <h1>{journal.title}</h1>
 
-          <div className='flex items-center gap-3'>
-            <button className='bg-blue-400 text-white p-2 rounded-lg'>Ask AI</button>
-            <button className='bg-blue-400 text-white p-2 rounded-lg'>See comments</button>
+          <div className="flex items-center gap-3">
+            <button className="rounded-lg bg-blue-400 p-2 text-white">Ask AI</button>
+            <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={() => mutation.mutate()}>
+              See comments
+            </button>
           </div>
         </section>
 

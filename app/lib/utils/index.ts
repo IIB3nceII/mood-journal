@@ -1,5 +1,7 @@
+export { default as createComment } from './create-comment'
 export { default as createJournal } from './create-journal'
 export { default as editDoc } from './edit-doc'
 export { default as editJournal } from './edit-journal'
+export { default as getJournalComments } from './get-journal-comments'
 export { default as getUsers } from './get-users'
 export { default as shareJournal } from './share-journal'
