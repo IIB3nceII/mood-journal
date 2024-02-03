@@ -31,7 +31,7 @@ const getJournal = async (journalId: string | null): Promise<ResponseType<Return
 
     if (!user || currentUser.id !== user.id || !journal.sharedWithIDs.every((q) => q !== currentUser.id)) return resObj
 
-    const {data:docs} = await getDocs(journal.id)
+    const { data: docs } = await getDocs(journal.id)
 
     return {
       ok: true,

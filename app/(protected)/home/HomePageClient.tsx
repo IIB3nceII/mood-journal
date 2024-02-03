@@ -18,7 +18,10 @@ const HomePageClient = ({ journals }: HomePageClientProps) => {
     const res = await createJournal()
     const errorMessage: string = 'Something went wrong during journal creation.'
 
-    if (!res.ok) toast.error(errorMessage)
+    if (!res.ok) {
+      toast.error(errorMessage)
+      return
+    }
 
     if (res.data?.publicId) {
       toast.success('Journal created successfully.')

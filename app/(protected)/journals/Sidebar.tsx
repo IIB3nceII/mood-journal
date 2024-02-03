@@ -1,17 +1,58 @@
-import { useShareModal } from '@hooks'
 import { Button } from '@common'
+import { useShareModal } from '@hooks'
+import { createDoc } from '@utils'
 import { format } from 'date-fns'
+import { useMemo } from 'react'
+import toast from 'react-hot-toast'
 
 type SidebarProps = {
+  journalId?: string
   title?: string
   editDisabled?: boolean
+  onAddNewDoc?: (args: any) => void
+  onItemSelect: (id: string) => void
   onTitleChange: (title: string) => void
   onTitleBlur: (title: string) => void
   items?: { title: string; [key: string]: any }[]
+  selectedItemId: string
 }
 
-const Sidebar = ({ title, editDisabled = false, onTitleChange, onTitleBlur, items = [] }: SidebarProps) => {
+const Sidebar = ({
+  journalId,
+  title,
+  editDisabled = false,
+  onAddNewDoc,
+  onItemSelect,
+  onTitleChange,
+  onTitleBlur,
+  items = [],
+  selectedItemId
+}: SidebarProps) => {
   const { onOpen } = useShareModal()
+
+  const sortedItems = useMemo(() => items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()), [items])
+
+  const onCreateDoc = async (): Promise<void> => {
+    const errorMessage: string = 'Something went wrong during journal creation.'
+
+    if (!journalId) {
+      toast.error(errorMessage)
+      return
+    }
+    const res = await createDoc(journalId)
+
+    if (!res.ok) {
+      toast.error(errorMessage)
+      return
+    }
+
+    if (res.data?.id) {
+      toast.success('Journal created successfully')
+      onAddNewDoc?.(res.data)
+    } else {
+      toast.error(errorMessage)
+    }
+  }
 
   return (
     <aside className="flex h-full w-1/3 flex-col gap-2 border-r border-slate-100 pr-4">
@@ -33,16 +74,22 @@ const Sidebar = ({ title, editDisabled = false, onTitleChange, onTitleBlur, item
           )}
         </div>
       )}
-      {!items.length ? (
+      {!sortedItems.length ? (
         <p className="flex h-full w-full items-center justify-center">No items</p>
       ) : (
-        <div className="flex cursor-default flex-col">
-          {items.map(({ title, createdAt }, i) => (
-            <div className="flex items-center justify-between gap-1 rounded-md p-2 hover:bg-slate-100 hover:bg-opacity-75" key={i}>
-              <p className="truncate">{title}</p>
+        <div className="flex cursor-default flex-col gap-1">
+          {sortedItems.map(({ id, title, createdAt }, i) => (
+            <button
+              key={i}
+              className="flex items-center justify-between gap-1 rounded-md p-2 hover:bg-slate-100 hover:bg-opacity-75"
+              onClick={() => onItemSelect(id)}
+            >
+              <p className={`truncate ${selectedItemId === id ? 'font-semibold' : 'font-light'}`}>{title}</p>
               <span className="whitespace-nowrap text-slate-400">{format(createdAt, 'yyyy-MM-dd')}</span>
-            </div>
+            </button>
           ))}
+
+          {!editDisabled && onAddNewDoc && <button onClick={onCreateDoc}>Create new</button>}
         </div>
       )}
     </aside>

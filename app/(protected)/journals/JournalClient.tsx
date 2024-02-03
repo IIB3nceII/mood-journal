@@ -76,14 +76,29 @@ const JournalClient = ({ user, journal }: JournalClientProps) => {
     editDoc(selectedDoc)
   }
 
+  const onSidebarItemSelect = (id: string): void => {
+    const selected = sidebarItems.find((item) => item.id === id)
+    if (!selected) return
+    setSelectedDoc(selected)
+  }
+
+  const onAddNewDoc = (doc: Doc): void => {
+    setSidebarItems([doc, ...sidebarItems])
+    setSelectedDoc(doc)
+  }
+
   return (
     <main className="h-screen">
       <Container>
         <div className="flex h-full">
           <Sidebar
+            journalId={selectedJournal.id}
             title={selectedJournal.title}
             items={sidebarItems}
+            selectedItemId={selectedDoc?.id ?? ''}
             editDisabled={editDisabled}
+            onAddNewDoc={onAddNewDoc}
+            onItemSelect={onSidebarItemSelect}
             onTitleChange={onJournalTitleChange}
             onTitleBlur={onEditJournal}
           />
