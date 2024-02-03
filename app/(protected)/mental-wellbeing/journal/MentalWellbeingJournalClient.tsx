@@ -1,18 +1,27 @@
 'use client'
 
-import { getJournal } from '@/actions'
 import { getJournalComments, useChatGPTMessagingModal, useMessagingModal } from '@/app/lib'
 import Journal from '@/app/types/entities/journal.model'
 import User from '@/app/types/entities/user.model'
 import { Container } from '@common'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Stats } from 'fs'
 
 type MentalWellbeingJournalClientProps = {
   user: Partial<User>
   journal: Partial<Journal>
+  statistics: string | undefined
 }
 
-const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalClientProps) => {
+const MentalWellbeingJournalClient = ({ user, journal, statistics }: MentalWellbeingJournalClientProps) => {
+  let stats: { illnesses: { illness: string; possibility: string }[] } | undefined | null = null
+
+  try {
+    stats = statistics?.length ? JSON.parse(statistics) : null
+  } catch (err) {
+    return <div>Error while generating statistics.</div>
+  }
+
   const queryClient = useQueryClient()
   const { onOpen, onChangeJournalId, onChangeUserId, onChangeItems } = useMessagingModal()
   const { onOpen: onOpenChatGPTModal, onChangeJournalId: onChangeChatGPTJournalId } = useChatGPTMessagingModal()
@@ -39,7 +48,19 @@ const MentalWellbeingJournalClient = ({ user, journal }: MentalWellbeingJournalC
     <main>
       <Container>
         <section className="mb-8 flex items-center gap-8">
-          <h1>{journal.title}</h1>
+          <div>
+            <h1>{journal.title}</h1>
+            {stats?.illnesses ? (
+              <div>
+                {stats.illnesses.map(({ illness, possibility }, i) => (
+                  <div key={i} className="flex gap-3">
+                    <p>{illness}</p>
+                    <p>{possibility}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
 
           <div className="flex items-center gap-3">
             <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={onOpenGPTModal}>

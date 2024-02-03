@@ -42,7 +42,6 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(comment)
   } catch (err) {
-    console.log(err)
     return NextResponse.error()
   }
 }

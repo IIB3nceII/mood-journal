@@ -4,7 +4,6 @@ import Link from 'next/link'
 
 const MentalWellbeing = async () => {
   const { data: journals } = await getJournals()
-  console.log(journals)
 
   return (
     <main>
