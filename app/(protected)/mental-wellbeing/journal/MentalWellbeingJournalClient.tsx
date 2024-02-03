@@ -5,7 +5,6 @@ import Journal from '@/app/types/entities/journal.model'
 import User from '@/app/types/entities/user.model'
 import { Container } from '@common'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Stats } from 'fs'
 
 type MentalWellbeingJournalClientProps = {
   user: Partial<User>
@@ -47,41 +46,50 @@ const MentalWellbeingJournalClient = ({ user, journal, statistics }: MentalWellb
   return (
     <main>
       <Container>
-        <section className="mb-8 flex items-center gap-8">
-          <div>
-            <h1>{journal.title}</h1>
-            {stats?.illnesses ? (
-              <div>
-                {stats.illnesses.map(({ illness, possibility }, i) => (
-                  <div key={i} className="flex gap-3">
-                    <p>{illness}</p>
-                    <p>{possibility}</p>
-                  </div>
-                ))}
+        <section className="mb-8 flex">
+          <div className="flex w-full justify-between gap-8">
+            <div className="flex flex-col gap-3">
+              <h1>{journal.title}</h1>
+              <div className="flex items-center gap-3">
+                <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={onOpenGPTModal}>
+                  Ask AI
+                </button>
+                <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={() => mutation.mutate()}>
+                  See comments
+                </button>
               </div>
-            ) : null}
-          </div>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={onOpenGPTModal}>
-              Ask AI
-            </button>
-            <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={() => mutation.mutate()}>
-              See comments
-            </button>
+            {stats?.illnesses ? (
+              <table className="border-collapse border">
+                <thead>
+                  <tr>
+                    <th className="border p-2">Illness</th>
+                    <th className="border p-2">Possibility</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.illnesses.map(({ illness, possibility }, i) => (
+                    <tr key={i}>
+                      <td className="border p-2">{illness}</td>
+                      <td className="border p-2 text-center">{possibility}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : null}
           </div>
         </section>
 
         <section>
           {!journal.docs?.length ? (
-            <div>No items.</div>
+            <p>No items.</p>
           ) : (
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
               {journal.docs.map(({ title, content }, i) => (
-                <div key={i} className="flex flex-col items-center rounded-lg border p-4">
-                  <div className="flex items-center pr-16">
-                    <h2>{title}</h2>
-                  </div>
+                <div key={i} className="flex flex-col items-center gap-3 overflow-x-hidden rounded-lg border p-4">
+                  <h2 className="w-full truncate">{title}</h2>
+
                   <div className="h-48 overflow-y-auto">
                     <p>{content}</p>
                   </div>
