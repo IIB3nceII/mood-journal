@@ -15,8 +15,9 @@ const ContentEdit = ({ item, editDisabled = false, onTitleChange, onContentChang
   if (!item) return <p>No item selected.</p>
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col gap-3">
       <input
+        className="w-full bg-transparent text-xl font-bold outline-none"
         type="text"
         placeholder="Aa..."
         disabled={editDisabled}

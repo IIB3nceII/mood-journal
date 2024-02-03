@@ -5,7 +5,7 @@ import Journal from '@/app/types/entities/journal.model'
 import { Container } from '@common'
 import { useAutosave, useShareModal } from '@hooks'
 import { editDoc, editJournal } from '@utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ContentEdit from './ContentEdit'
 import Sidebar from './Sidebar'
 import User from '@/app/types/entities/user.model'
@@ -23,7 +23,7 @@ const JournalClient = ({ user, journal }: JournalClientProps) => {
   const [selectedJournal, setSelectedJournal] = useState<Partial<Journal>>(journal)
   const [selectedDoc, setSelectedDoc] = useState<Doc | null>(journal.docs?.length ? journal?.docs[0] : null)
 
-  const editDisabled = user.id !== journal.userId
+  const editDisabled = useMemo<boolean>(() => user.id !== journal.userId, [user.id, journal.userId])
 
   let changeCount = 0
 
