@@ -13,11 +13,13 @@ export const GET = async (req: NextRequest) => {
         isDeleted: false
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'asc'
       }
     })
 
-    return NextResponse.json(comments)
+    return NextResponse.json(
+      comments.map((comment) => ({ ...comment, createdAt: comment.createdAt.toISOString(), updatedAt: comment.updatedAt.toISOString() }))
+    )
   } catch (err) {
     return NextResponse.error()
   }
