@@ -1,6 +1,9 @@
-const sendMessage = async (message: string, journalId: string) => {
+import ResponseType from '@/app/types/response-type.model'
+import { ModelMessage } from '@prisma/client'
+
+const sendMessage = async (message: string, journalId: string): Promise<ResponseType<[ModelMessage, ModelMessage]>> => {
   try {
-    const q = await fetch('/api/chatgpt', {
+    const res = await fetch('/api/chatgpt', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -8,11 +11,11 @@ const sendMessage = async (message: string, journalId: string) => {
       body: JSON.stringify({ message, journalId })
     })
 
-    const res = await q.json()
+    const data = await res.json()
 
-    return res
+    return { ok: true, status: 200, data }
   } catch (err) {
-    return null
+    return { ok: false, status: 500, error: 'Error while generating response.' }
   }
 }
 

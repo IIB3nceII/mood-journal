@@ -84,7 +84,7 @@ export const POST = async (req: Request) => {
 
     if (!newModelMessage) return NextResponse.error()
 
-    return NextResponse.json(newModelMessage)
+    return NextResponse.json([newUserMessage, newModelMessage])
   } catch (err) {
     return NextResponse.error()
   }

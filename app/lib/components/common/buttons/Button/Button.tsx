@@ -17,7 +17,7 @@ interface IButtonProps {
 const Button = ({ label, onClick, disabled = false, type = 'button', outlined = false, small, icon: Icon, iconPosition = 'left' }: IButtonProps) => (
   <button
     className={`relative w-full rounded-lg transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-75 ${
-      outlined ? 'border-black bg-white text-black' : 'border-rose-500 bg-rose-500 text-white'
+      outlined ? 'border-black bg-white text-black' : 'border-cyan-500 bg-cyan-500 text-white'
     } ${small ? 'border-[1px] p-1 text-sm font-light' : 'text-md border-2 py-3 font-semibold'}`}
     type={type}
     onClick={onClick}

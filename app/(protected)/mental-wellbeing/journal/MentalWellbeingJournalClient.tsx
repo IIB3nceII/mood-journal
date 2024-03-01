@@ -3,7 +3,7 @@
 import { getJournalComments, useChatGPTMessagingModal, useMessagingModal } from '@/app/lib'
 import Journal from '@/app/types/entities/journal.model'
 import User from '@/app/types/entities/user.model'
-import { Container } from '@common'
+import { Button, Container } from '@common'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 type MentalWellbeingJournalClientProps = {
@@ -51,12 +51,8 @@ const MentalWellbeingJournalClient = ({ user, journal, statistics }: MentalWellb
             <div className="flex flex-col gap-3">
               <h1>{journal.title}</h1>
               <div className="flex items-center gap-3">
-                <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={onOpenGPTModal}>
-                  Ask AI
-                </button>
-                <button className="rounded-lg bg-blue-400 p-2 text-white" onClick={() => mutation.mutate()}>
-                  See comments
-                </button>
+                <Button label="Ask AI" onClick={onOpenGPTModal} />
+                <Button label="See comments" onClick={() => mutation.mutate()} />
               </div>
             </div>
 

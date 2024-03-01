@@ -37,9 +37,9 @@ const HomePageClient = ({ journals }: HomePageClientProps) => {
         <section className="mb-6 flex items-center justify-between">
           <h1>Journals</h1>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-1/5">
             <Button label="Create" onClick={onCreateJournal} />
-            <button>filter</button>
+            <Button label="Filter" />
           </div>
         </section>
 
